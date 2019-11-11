@@ -62,7 +62,9 @@ public class TransferDotSh implements HostingProvider {
 
                 this.packURL = new String(byteArray, StandardCharsets.UTF_8).replace("https://transfer.sh/", "http://transfer.sh/get/");
             } else {
-                throw new RuntimeException();
+                Logs.log(ChatColor.RED, "Can't connect to transfer.sh! Resource pack not uploaded!");
+                return false;
+                // throw new RuntimeException();
             }
 
         } catch (IOException ignored) {
