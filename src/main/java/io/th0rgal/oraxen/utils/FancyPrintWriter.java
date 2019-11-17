@@ -43,7 +43,6 @@ public class FancyPrintWriter {
 
     // wrapper part
     // constructors
-    // java 8
 
     /**
      * @since 1.0.0
@@ -101,8 +100,6 @@ public class FancyPrintWriter {
         printWriter = new PrintWriter(out, autoFlush);
     }
 
-    // end of java 8
-    // --------------
     // end of constructors
     // --------------------
 
@@ -136,19 +133,6 @@ public class FancyPrintWriter {
     public boolean checkError() {
         return printWriter.checkError();
     }
-
-    // TODO use reflection in a good way to make it work
-    /*
-    protected void clearError() {
-        try {
-            Method method = printWriter.getClass().getDeclaredMethod("clearError");
-            method.setAccessible(true);
-            method.invoke(printWriter, (Object) null);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException exception) {
-            exception.printStackTrace();
-        }
-    }
-     */
 
     /**
      * @since 1.0.0
@@ -290,18 +274,6 @@ public class FancyPrintWriter {
      */
     public void println(String str) {
         printWriter.println(str);
-    }
-
-    // TODO make good use of reflection to implement this
-    /*
-    protected void setError()
-     */
-
-    /**
-     * @since 1.0.0
-     */
-    public void write(char[] buf, int off, int len) {
-        printWriter.write(buf, off, len);
     }
 
     /**
