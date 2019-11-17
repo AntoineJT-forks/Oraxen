@@ -1,5 +1,6 @@
 package io.th0rgal.oraxen.pack.upload.hosts;
 
+import io.th0rgal.oraxen.utils.FancyPrintWriter;
 import io.th0rgal.oraxen.utils.logs.Logs;
 import org.bukkit.ChatColor;
 
@@ -33,20 +34,24 @@ public class TransferDotSh implements HostingProvider {
         connection.setDoOutput(true);
         connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
 
-        try (OutputStream output = connection.getOutputStream();
-             PrintWriter writer = new PrintWriter(new OutputStreamWriter(output, charset), true)) {
+        try (OutputStream output = connection.getOutputStream()) {
+            FancyPrintWriter writer = new FancyPrintWriter(new OutputStreamWriter(output, charset), true);
             // Send binary file.
-            writer.append("--").append(boundary).append(CRLF);
-            writer.append("Content-Disposition: form-data; name=\"binaryFile\"; filename=\"").append(resourcePack.getName()).append("\"").append(CRLF);
-            writer.append("Content-Type: ").append(URLConnection.guessContentTypeFromName(resourcePack.getName())).append(CRLF);
-            writer.append("Content-Transfer-Encoding: binary").append(CRLF);
-            writer.append(CRLF).flush();
+            writer.append("--", boundary, CRLF)
+                    .append("Content-Disposition: form-data; name=\"binaryFile\"; filename=\"", resourcePack.getName(), "\"", CRLF)
+                    .append("Content-Type: ", URLConnection.guessContentTypeFromName(resourcePack.getName()), CRLF)
+                    .append("Content-Transfer-Encoding: binary", CRLF)
+                    .append(CRLF)
+                    .flush();
             Files.copy(resourcePack.toPath(), output);
             output.flush(); // Important before continuing with writer!
-            writer.append(CRLF).flush(); // CRLF is important! It indicates end of boundary.
+            writer.append(CRLF)
+                    .flush(); // CRLF is important! It indicates end of boundary.
 
             // End of multipart/form-data.
-            writer.append("--").append(boundary).append("--").append(CRLF).flush();
+            writer.append("--", boundary, "--", CRLF)
+                    .flush();
+            writer.close(); // close resource to avoid memory leak!
             // Request is lazily fired whenever you need to obtain information about response.
 
             if (connection.getResponseCode() == 200) {
