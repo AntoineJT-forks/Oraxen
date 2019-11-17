@@ -26,7 +26,7 @@ public class TransferDotSh implements HostingProvider {
             connection = (HttpURLConnection) new URL(url).openConnection();
             connection.setRequestMethod("PUT");
         } catch (IOException ignored) {
-            Logs.log(ChatColor.RED, "Can't connect to transfer.sh! Resource pack not uploaded!");
+            printError();
             return false;
         }
 
@@ -62,16 +62,20 @@ public class TransferDotSh implements HostingProvider {
 
                 this.packURL = new String(byteArray, StandardCharsets.UTF_8).replace("https://transfer.sh/", "http://transfer.sh/get/");
             } else {
-                Logs.log(ChatColor.RED, "Can't connect to transfer.sh! Resource pack not uploaded!");
+                printError();
                 return false;
                 // throw new RuntimeException();
             }
 
         } catch (IOException ignored) {
-            Logs.log(ChatColor.RED, "Can't connect to transfer.sh! Resource pack not uploaded!");
+            printError();
             return false;
         }
         return true;
+    }
+
+    private void printError() {
+        Logs.log(ChatColor.RED, "Can't connect to transfer.sh! Resource pack not uploaded!");
     }
 
     @Override
